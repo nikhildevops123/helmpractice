@@ -47,14 +47,19 @@ jobs:
           time: '1m' # for 1 minute
       - name: kubectl
         run: kubectl get pods -A 
-      - name: Port Forwarding 
+      - name: Node Port Forwarding 
         run: |
-          export POD_NAME=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}') 
-          echo $POD_NAME
           export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services mynginx)
-          echo $NODE_PORT
-          kubectl port-forward $POD_NAME 8080:$NODE_PORT
-          curl -s http://127.0.0.1:8080
+          export NODE_IP=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
+          echo http://$NODE_IP:$NODE_PORT
+      # - name: Port Forwarding 
+      #   run: |
+      #     export POD_NAME=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}') 
+      #     echo $POD_NAME
+      #     export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services mynginx)
+      #     echo $NODE_PORT
+      #     kubectl port-forward $POD_NAME 8080:$NODE_PORT
+      #     curl -s http://127.0.0.1:8080
       # - name: Port Forwarding 
       #   run: |
       #     export POD_NAME=$(kubectl get pods -l "app.kubernetes.io/name=mychart,app.kubernetes.io/instance=mynginx" -o jsonpath="{.items[0].metadata.name}")
