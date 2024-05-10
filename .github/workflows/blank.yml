@@ -45,8 +45,10 @@ jobs:
         run: kubectl get pods -A 
       - name: Port Forwarding 
         run: |
-          export POD_NAME=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}')
+          export POD_NAME=$(kubectl get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}') 
+          echo $POD_NAME
           export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services mynginx)
+          echo $NODE_PORT
           kubectl port-forward $POD_NAME 8080:$NODE_PORT
           curl -s http://127.0.0.1:8080
       # - name: Port Forwarding 
