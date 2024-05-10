@@ -35,11 +35,12 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
       - name: Helm tool installer
-        uses: Azure/setup-helm@v3
-          
+        uses: Azure/setup-helm@v3          
       - name: start minikube
         id: minikube
-        uses: medyagh/setup-minikube@latest 
+        uses: medyagh/setup-minikube@latest
+      - name: Install Chart 
+        run: helm install myapp mychart 
       - name: kubectl
         run: kubectl get pods -A
       - name: kubectl deployment
