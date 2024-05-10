@@ -41,6 +41,10 @@ jobs:
         uses: medyagh/setup-minikube@latest
       - name: Install Chart 
         run: helm install myapp mychart 
+      - name: Wait Timer 
+        uses: GuillaumeFalourd/wait-sleep-action@v1
+        with:
+          time: '2m' # for 1 minute
       - name: kubectl
         run: kubectl get pods -A 
       - name: Port Forwarding 
