@@ -42,14 +42,20 @@ jobs:
       - name: Install Chart 
         run: helm install myapp mychart 
       - name: kubectl
-        run: kubectl get pods -A
-      - name: kubectl deployment
-        run: kubectl create deployment kubernetes-bootcamp --image=nginx
-      - name: kubectl
-        run: kubectl get pods -A
-      - name: kubectl
-        run: kubectl create svc nodeport my-ns --tcp=5678:80
-      - name: Test service URLs
+        run: kubectl get pods -A 
+      - name: Port Forwarding 
+        run: |
+          export POD_NAME=$(kubectl get pods -l "app.kubernetes.io/name=buildachart,app.kubernetes.io/instance=mynginx" -o jsonpath="{.items[0].metadata.name}")
+          export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services mynginx)
+          kubectl port-forward $POD_NAME 8080:$NODE_PORT
+          curl -s http://127.0.0.1:8080
+      # - name: kubectl deployment
+      #   run: kubectl create deployment kubernetes-bootcamp --image=nginx
+      # - name: kubectl
+      #   run: kubectl get pods -A
+      # - name: kubectl
+      #   run: kubectl create svc nodeport my-ns --tcp=5678:80
+      # - name: Test service URLs
         run: |
           minikube service list
           minikube service discover --url
