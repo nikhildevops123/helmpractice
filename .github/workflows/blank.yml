@@ -55,10 +55,8 @@ jobs:
       #   run: kubectl get pods -A
       # - name: kubectl
       #   run: kubectl create svc nodeport my-ns --tcp=5678:80
-      # - name: Test service URLs
+      - name: Test service URLs
         run: |
           minikube service list
           minikube service discover --url
-          echo -n "------------------opening the service------------------"
-          curl $(minikube service discover --url)/version
       
